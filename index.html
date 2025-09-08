@@ -1,701 +1,2087 @@
-<!doctype html>
+<ATTACHMENT_FILE>
+<FILE_INDEX>File 1</FILE_INDEX>
+<FILE_NAME>index.html</FILE_NAME>
+<FILE_CONTENT>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Moulds 市集（单页版）</title>
-  <meta name="description" content="简洁的模具列表，支持本机编辑与 JSON 导出，适合 GitHub Pages 发布。" />
+  <title>钰垚环球 | Yuyao Terraflow</title>
+  <meta name="description" content="专注玩具类目的二手模具：注塑模具、吹塑模具、压铸模具。支持关键字搜索、分类筛选、价格区间、排序与联系卖家。"/>
+  <!-- 安全相关元标签 -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
   <style>
     :root{
-      --bg:#0a0f1a;
-      --panel:#0f1524;
-      --card:#121a2e;
-      --text:#e6f0ff;
-      --muted:#91a1c6;
-      --primary:#6cf2ff;
-      --primary-2:#9f7bff;
-      --accent:#00ffa3;
-      --danger:#ff5c8a;
-      --ok:#4be477;
-      --border:rgba(151,200,255,.15);
-      --chip:#1b2542;
-      --chip-on:#132f3f;
-      --shadow:0 10px 30px rgba(0,0,0,.35), inset 0 0 0 1px var(--border);
-      --radius:14px;
+      /* 赛博朋克主题色 */
+      --cp-black: #0d0221;
+      --cp-pink: #ff2a6d;
+      --cp-blue: #05d9e8;
+      --cp-purple: #d300c5;
+      --cp-yellow: #fee800;
+      
+      /* 原有主题色 */
+      --bg:#0b0e13;--panel:#121720;--muted:#8fa3b8;--text:#e8f0ff;--brand:#4dd3ff;--accent:#a3ffb5;--warn:#ffd166;
+      --danger:#ff6b6b;--ok:#22c55e;--chip:#1b2330;--chip-br:#273140;--card:#10151e;--shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    html,body{margin:0;height:100%;background: radial-gradient(1200px 600px at 10% -10%, rgba(156,115,255,.18), transparent 45%), linear-gradient(180deg, #080b14 0%, #0a0f1a 60%, #0a0f1a 100%); color:var(--text); font:16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-    a{color:var(--primary)}
-    .container{max-width:1200px;margin:0 auto;padding:20px}
-    header{position:sticky;top:0;background:rgba(10,15,26,.7);backdrop-filter: blur(10px); border-bottom:1px solid var(--border); z-index:20}
-    header .container{display:flex;gap:14px;align-items:center}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--primary-2));box-shadow:0 0 20px rgba(108,242,255,.3), inset 0 0 18px rgba(0,0,0,.2)}
-    .title{font-size:18px;font-weight:700;letter-spacing:.3px}
-    .tag{font-size:12px;color:var(--muted);padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.02)}
-    .toolbar{margin-left:auto;display:flex;gap:10px;align-items:center}
-    .btn{border:1px solid var(--border); background:linear-gradient(180deg,#121a2e,#0f1524); color:var(--text); padding:9px 12px;border-radius:12px;cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:8px}
-    .btn:hover{border-color:rgba(151,200,255,.35)}
-    .btn.primary{border-color:rgba(108,242,255,.5); background:linear-gradient(180deg,#132a35,#0f1e29); box-shadow:0 10px 30px rgba(108,242,255,.15), inset 0 0 0 1px rgba(108,242,255,.3)}
-    .btn.danger{border-color:rgba(255,92,138,.3); background:linear-gradient(180deg,#2b1520,#20101a)}
-    .switch{display:inline-flex; align-items:center; gap:8px; font-size:13px; color:var(--muted)}
-    input[type="checkbox"]{width:18px;height:18px; accent-color: var(--accent)}
-    main .container{display:grid; grid-template-columns:280px 1fr; gap:18px}
-    .panel{background:linear-gradient(180deg,#0f1524,#0c1220); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px}
-    .panel h3{margin:6px 0 12px 0; font-size:14px; color:#cfe3ff; letter-spacing:.2px}
-    .filters .row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
-    .chip{padding:8px 10px; border-radius:999px; background:var(--chip); border:1px solid var(--border); color:#cfe3ff; cursor:pointer; font-size:13px}
-    .chip.active{background:var(--chip-on); border-color:rgba(108,242,255,.4); box-shadow:0 0 0 1px rgba(108,242,255,.15) inset}
-    .input, select{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background: #0c1220; color:var(--text); outline:none}
-    .range{display:flex; gap:8px}
-    .range input{width:100%}
-    .meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:13px}
-    .grid{display:grid; grid-template-columns: repeat(3,1fr); gap:16px}
-    @media (max-width: 1000px){ main .container{grid-template-columns:1fr} .grid{grid-template-columns: repeat(2,1fr)} }
-    @media (max-width: 680px){ .grid{grid-template-columns: 1fr} }
-    .card{background:linear-gradient(180deg,#10172a,#0d1324); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column}
-    .thumb{position:relative; aspect-ratio: 4/3; background:#0a0f1a; overflow:hidden}
-    .thumb img{width:100%; height:100%; object-fit:cover; display:block}
-    .price{position:absolute; bottom:10px; left:10px; padding:6px 10px; background: rgba(10,15,26,.6); backdrop-filter: blur(6px); border:1px solid var(--border); border-radius:10px; color:#eafff7}
-    .body{padding:12px}
-    .name{font-weight:700; font-size:16px; margin:4px 0 6px}
-    .badges{display:flex; gap:6px; flex-wrap:wrap}
-    .badge{font-size:12px; color:#cfe3ff; border:1px solid var(--border); padding:3px 8px; border-radius:999px; background: rgba(255,255,255,.02)}
-    .desc{color:#a9b7d6; font-size:13px; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient: vertical; overflow:hidden}
-    .listbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px}
-    .pager{display:flex; gap:6px; align-items:center}
-    .pager .btn{padding:7px 10px}
-    .muted{color:var(--muted)}
-    footer{padding:30px 0; color:#99a7c6; text-align:center}
-    /* 编辑器 */
-    .editor{margin-top:12px}
-    .editor .tips{font-size:13px; color:#b7c7e6; background:rgba(156,115,255,.08); border:1px dashed rgba(156,115,255,.4); padding:10px; border-radius:10px}
-    .editor .grid2{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
-    .editor .row{display:flex; gap:10px; align-items:center; margin:8px 0}
-    .editor .imgs{display:flex; gap:8px; flex-wrap:wrap; margin:8px 0}
-    .editor .imgs .ph{width:80px; height:64px; border:1px solid var(--border); border-radius:8px; overflow:hidden; position:relative; background:#0a0f1a}
-    .editor .imgs img{width:100%; height:100%; object-fit:cover}
-    .editor .imgs .tools{position:absolute; right:4px; top:4px; display:flex; gap:4px}
-    .mini{font-size:12px; padding:5px 8px; border-radius:8px}
-    .sep{height:1px; background:var(--border); margin:12px 0}
-    code.k{color:#8ee7ff}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;color:var(--text);font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif}
+    a{text-decoration:none}
+    
+    /* 封面页样式 */
+    #cover {
+      position: relative;
+      height: 100vh;
+      background: var(--cp-black);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+    
+    /* 赛博朋克网格背景 */
+    .grid-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(5, 217, 232, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 217, 232, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 1;
+    }
+    
+    /* 霓虹光效标题 */
+    .cyber-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 900;
+      margin: 0 0 20px;
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+    
+    .cyber-title span {
+      background: linear-gradient(90deg, var(--cp-blue), var(--cp-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .cyber-title span::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      z-index: -1;
+      background: linear-gradient(90deg, var(--cp-purple), var(--cp-yellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: blur(4px);
+      opacity: 0.7;
+    }
+    
+    .cyber-subtitle {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: var(--cp-blue);
+      margin: 0 0 40px;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 10px rgba(5, 217, 232, 0.7);
+    }
+    
+    /* 故障艺术按钮 */
+    .cyber-btn {
+      position: relative;
+      z-index: 2;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: transparent;
+      border: 2px solid var(--cp-pink);
+      color: var(--cp-pink);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 42, 109, 0.2), transparent);
+      transition: all 0.6s ease;
+    }
+    
+    .cyber-btn:hover {
+      box-shadow: 0 0 15px var(--cp-pink), 0 0 30px rgba(255, 42, 109, 0.5);
+      transform: translateY(-3px);
+    }
+    
+    .cyber-btn:hover::before {
+      left: 100%;
+    }
+    
+    /* 装饰性几何图形 */
+    .geo-shape {
+      position: absolute;
+      z-index: 1;
+      opacity: 0.2;
+    }
+    
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 200px solid var(--cp-blue);
+      top: 10%;
+      right: 10%;
+      transform: rotate(45deg);
+    }
+    
+    .circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid var(--cp-purple);
+      bottom: 15%;
+      left: 10%;
+      animation: pulse 6s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.2; }
+      50% { transform: scale(1.2); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 0.2; }
+    }
+    
+    /* 扫描线效果 */
+    .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 1;
+      animation: scan 4s linear infinite;
+    }
+    
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+    
+    /* 导航栏样式 */
+    header{position:sticky;top:0;z-index:40;background:rgba(16,21,30,.8);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid #1f2a3a}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+    .topbar{display:flex;align-items:center;gap:16px;min-height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .logo i{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 120deg,var(--brand),#9b8bff,var(--accent));display:inline-block}
+    .nav{margin-left:auto;display:flex;gap:12px;flex-wrap:wrap}
+    .nav a{padding:8px 10px;border-radius:10px;color:var(--muted)}
+    .nav a.active,.nav a:hover{background:var(--chip);color:var(--text);border:1px solid var(--chip-br)}
+
+    /* 语言切换按钮 */
+    .lang-switch {
+      margin-left: 10px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--chip);
+      border: 1px solid var(--chip-br);
+      color: var(--text);
+      cursor: pointer;
+    }
+    
+    /* 管理员登录按钮 */
+    .admin-login {
+      margin-left: 10px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--brand);
+      color: var(--bg);
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+    }
+
+    .hero{padding:28px 0 14px}
+    .hero h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
+    .hero p{margin:0;color:var(--muted)}
+
+    /* 筛选条件标签 */
+    .filter-tags{display:flex;flex-wrap:gap;gap:8px;padding:8px 0;margin-bottom:8px;align-items:center}
+    .filter-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-br);font-size:13px}
+    .filter-tag .close{width:16px;height:16px;border-radius:50%;background:#273140;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px}
+    
+    .controls{display:grid;grid-template-columns:1.3fr .9fr .9fr .9fr .9fr auto;gap:10px;margin:16px 0 8px}
+    .controls input,.controls select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #263244;background:#0d1220;color:var(--text)}
+    .btn{padding:10px 14px;border-radius:12px;border:1px solid #2a3a56;background:#0f1a2e;color:var(--text);cursor:pointer}
+    .btn:hover{filter:brightness(1.12)}
+    .btn.brand{background:linear-gradient(180deg,#153757,#10263e);border-color:#1d3b5a}
+
+    main{padding:14px 0 80px}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+
+    aside{position:sticky;top:78px;align-self:start;background:var(--panel);border:1px solid #1c2533;border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+    aside h3{margin:4px 0 12px}
+    .filter-group{margin-bottom:18px}
+    .filter-group label{display:block;margin-bottom:6px}
+    .filter-group .header{display:flex;justify-content:space-between;margin-bottom:8px}
+    .filter-group .more{color:var(--brand);font-size:12px;cursor:pointer}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:6px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-br);color:var(--text);cursor:pointer}
+    .chip input{display:none}
+    .chip.active{outline:2px solid #36567c}
+    .range{display:flex;gap:8px}
+    .range input{flex:1}
+    .range-value{text-align:center;margin-top:6px;font-size:12px;color:var(--muted)}
+
+    .results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media (max-width:1100px){.layout{grid-template-columns:1fr}.results{grid-template-columns:repeat(2,1fr)} aside{position:static}}
+    @media (max-width:720px){.controls{grid-template-columns:1fr 1fr;}.results{grid-template-columns:1fr}}
+
+    .card{position:relative;background:var(--card);border:1px solid #1b2535;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:transform .2s}
+    .card:hover{transform:translateY(-4px)}
+    .card .thumb{aspect-ratio:4/3;background:#0a0f18;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .card .thumb img{width:100%;height:100%;object-fit:cover;opacity:.8}
+    .card .thumb svg{width:60%;height:60%;opacity:.7}
+    .card .thumb .pic-count{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:4px;font-size:12px}
+    .card .body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:8px}
+    .title{font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#0f2138;border:1px solid #1d2d48;color:#d6e8ff}
+    .price{font-weight:800;font-size:16px;color:var(--accent)}
+    .foot{display:flex;align-items:center;gap:10px;margin-top:auto}
+    .foot .btn{flex:1;text-align:center}
+    .state{position:absolute;top:8px;left:8px;padding:4px 8px;border-radius:8px;font-size:12px;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);border:1px solid #243248}
+    .state.ok{color:#b4ffcc;border-color:#215f3a;background:rgba(15,44,27,.5)}
+    .state.warn{color:#fff1c5;border-color:#6a5c23;background:rgba(55,46,10,.5)}
+    .state.sold{color:#ffd2d2;border-color:#7a2a2a;background:rgba(50,10,10,.55)}
+
+    .seller-info{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:4px}
+    .seller-avatar{width:16px;height:16px;border-radius:50%;background:var(--chip-br);display:flex;align-items:center;justify-content:center;font-size:8px}
+    
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px dashed #2a3a52;background:#0e1624}
+    .divider{height:1px;background:#1e2838;margin:8px 0}
+
+    /* 分页样式 */
+    .pagination{display:flex;justify-content:center;gap:8px;margin:30px 0;padding:10px}
+    .page-btn{width:36px;height:36px;border-radius:8px;border:1px solid #2a3a56;background:#0f1a2e;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .page-btn.active{background:var(--brand);color:var(--bg);border-color:var(--brand)}
+    .page-btn:disabled{opacity:.5;cursor:not-allowed}
+
+    footer{border-top:1px solid #1e2a3b;background:#0b1019;color:var(--muted)}
+    footer .grid{display:grid;gap:16px;grid-template-columns:2fr 1fr 1fr 1fr}
+    footer a{color:#b7d6ff}
+    .contact-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .contact-info svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    dialog{border:none;border-radius:16px;padding:0;background:#0e1624;color:var(--text);max-width:800px;width:96%}
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+    .modal-head{padding:14px 16px;border-bottom:1px solid #223148;display:flex;align-items:center;justify-content:space-between}
+    .modal-body{padding:16px;max-height:70vh;overflow-y:auto}
+    .modal-foot{padding:12px 16px;border-top:1px solid #223148;display:flex;gap:8px;justify-content:flex-end}
+
+    .empty{padding:24px;border:1px dashed #2a3a52;border-radius:16px;text-align:center;color:var(--muted)}
+    
+    /* 详情页图片轮播 */
+    .img-gallery{display:grid;grid-template-columns:80px 1fr;gap:12px;margin-bottom:16px}
+    .thumb-list{display:flex;flex-direction:column;gap:8px}
+    .thumb-item{width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid #2a3a52;cursor:pointer}
+    .thumb-item.active{border-color:var(--brand)}
+    .main-img{height:300px;border-radius:12px;overflow:hidden;background:#0a0f18;display:flex;align-items:center;justify-content:center}
+    .main-img img{width:100%;height:100%;object-fit:cover}
+    
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+    .detail-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #2a3a52}
+    .detail-label{color:var(--muted)}
+
+    /* 图片上传区域样式 */
+    .image-upload {
+      margin: 16px 0;
+      grid-column: 1 / -1;
+    }
+    .upload-area {
+      border: 2px dashed #2a3a52;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+    .upload-area:hover {
+      border-color: var(--brand);
+      background-color: rgba(77, 211, 255, 0.05);
+    }
+    .upload-icon {
+      font-size: 24px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .upload-text {
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .file-input {
+      display: none;
+    }
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .preview-item {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a3a52;
+    }
+    .preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .remove-img {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: rgba(255, 107, 107, 0.8);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    .remove-img:hover {
+      background-color: var(--danger);
+    }
+    .upload-limit {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* 页面容器 */
+    #marketplace {
+      background:linear-gradient(180deg,var(--bg),#0f1420 60%,#0b0e13);
+      display: none;
+    }
+    
+    /* 管理员登录模态框 */
+    #adminLogin {
+      max-width: 400px;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .login-form input {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #2a3a52;
+      background: #0d1220;
+      color: var(--text);
+    }
+    
+    /* 安全锁图标 */
+    .security-lock {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--ok);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      .cyber-title {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+      }
+      
+      .triangle {
+        border-left: 60px solid transparent;
+        border-right: 60px solid transparent;
+        border-bottom: 120px solid var(--cp-blue);
+      }
+      
+      .circle {
+        width: 100px;
+        height: 100px;
+      }
+      
+      footer .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="brand">
-        <div class="logo"></div>
-        <div>
-          <div class="title">Moulds 市集</div>
-          <div class="tag">单页 · 本机编辑 · JSON 发布</div>
-        </div>
-      </div>
-      <div class="toolbar">
-        <button class="btn" id="btnReload">重新加载数据</button>
-        <label class="switch"><input type="checkbox" id="toggleEdit"> 编辑模式</label>
-      </div>
-    </div>
-  </header>
+  <!-- 赛博朋克风格封面页 -->
+  <div id="cover">
+    <div class="grid-bg"></div>
+    <div class="scanline"></div>
+    <div class="geo-shape triangle"></div>
+    <div class="geo-shape circle"></div>
+    
+    <h1 class="cyber-title">
+      <span data-text="YUYAO" data-text-en="YUYAO">YUYAO</span>
+    </h1>
+    <h1 class="cyber-title">
+      <span data-text="TERRAFLOW" data-text-en="TERRAFLOW">TERRAFLOW</span>
+    </h1>
+    <p class="cyber-subtitle" data-i18n="future_market">未来玩具模具交易市场 • 2077</p>
+    <button class="cyber-btn" onclick="enterMarketplace()" data-i18n="enter_market">进入市场</button>
+  </div>
 
-  <main>
-    <div class="container">
-      <!-- 侧栏筛选 -->
-      <aside class="panel filters">
-        <h3>筛选</h3>
-        <div class="row">
-          <input id="q" class="input" placeholder="关键词（名称/描述）" />
+  <!-- 原有模具集市页面 -->
+  <div id="marketplace">
+    <header>
+      <div class="wrap topbar">
+        <div class="logo" aria-label="Yuyao Terraflow">
+          <i></i><span data-i18n="company_name">钰垚环球 | Yuyao Terraflow</span>
         </div>
-        <div class="row">
-          <select id="category">
-            <option value="">分类（全部）</option>
+        <nav class="nav" aria-label="主菜单">
+          <a class="active" href="#" data-i18n="mould_market">模具市场</a>
+          <a href="#overview" onclick="openOverview()" data-i18n="my_products">我的模具产品</a>
+          <a href="#post" onclick="checkAdminAndOpenPost()" data-i18n="post_mould">发布模具</a>
+          <a href="#safety" onclick="showSafetyTips()" data-i18n="safety_guide">安全指南</a>
+        </nav>
+        <button class="lang-switch" id="langSwitch" onclick="toggleLanguage()">EN</button>
+        <button class="admin-login" id="adminLoginBtn" onclick="openAdminLogin()">管理员登录</button>
+      </div>
+      <div class="wrap hero">
+        <h1 data-i18n="focus_on_toy_moulds">专注玩具类目的二手模具</h1>
+        <p data-i18n="browse_and_filter">浏览、筛选并联系卖家。支持：注塑 / 吹塑 / 压铸；类目覆盖：车模、积木、娃娃、球类、水枪等。</p>
+        
+        <!-- 已选筛选条件标签 -->
+        <div class="filter-tags" id="filterTags">
+          <span class="muted" data-i18n="selected">已选：</span>
+        </div>
+        
+        <div class="controls" role="region" aria-label="搜索与排序">
+          <input id="q" type="search" placeholder="搜索关键词，如 “遥控车外壳” / 材质 / 型号" data-placeholder-i18n="search_placeholder" />
+          <select id="cat">
+            <option value="" data-i18n="all_categories">全部类目</option>
+            <option data-i18n="car_models">车模</option>
+            <option data-i18n="building_blocks">积木</option>
+            <option data-i18n="dolls">娃娃/公仔</option>
+            <option data-i18n="balls">球类</option>
+            <option data-i18n="water_guns">水枪/水具</option>
+            <option data-i18n="board_games">桌游/棋类</option>
+            <option data-i18n="gears">齿轮/配件</option>
           </select>
-        </div>
-        <div class="row">
-          <select id="process" multiple size="4" title="按住 Ctrl/⌘ 可多选">
+          <select id="process">
+            <option value="" data-i18n="all_processes">全部工艺</option>
+            <option data-i18n="injection_molding">注塑</option>
+            <option data-i18n="blow_molding">吹塑</option>
+            <option data-i18n="die_casting">压铸</option>
           </select>
-        </div>
-        <div class="row">
-          <select id="material" multiple size="4" title="按住 Ctrl/⌘ 可多选">
+          <select id="material">
+            <option value="" data-i18n="all_materials">钢材</option>
+            <option>P20</option>
+            <option>H13</option>
+            <option>718H</option>
+            <option>NAK80</option>
           </select>
-        </div>
-        <div class="row range">
-          <input id="minPrice" type="number" class="input" placeholder="最低价 USD" min="0" step="1" />
-          <input id="maxPrice" type="number" class="input" placeholder="最高价 USD" min="0" step="1" />
-        </div>
-        <div class="row">
-          <button class="btn mini" id="btnReset">重置筛选</button>
-        </div>
-        <div class="sep"></div>
-        <div class="row">
           <select id="sort">
-            <option value="latest">排序：最新优先</option>
-            <option value="priceAsc">价格从低到高</option>
-            <option value="priceDesc">价格从高到低</option>
-            <option value="nameAsc">名称 A-Z</option>
+            <option value="new" data-i18n="newest">最新发布</option>
+            <option value="price_up" data-i18n="price_low_to_high">价格从低到高</option>
+            <option value="price_down" data-i18n="price_high_to_low">价格从高到低</option>
+            <option value="shots" data-i18n="shot_count">出模次数（少→多）</option>
           </select>
+          <button class="btn brand" id="apply" data-i18n="apply">应用</button>
         </div>
-        <div class="row">
-          <select id="perPage">
-            <option value="12">每页 12 条</option>
-            <option value="24">每页 24 条</option>
-            <option value="48">每页 48 条</option>
-          </select>
-        </div>
+      </div>
+    </header>
 
-        <!-- 编辑面板（仅编辑模式显示） -->
-        <div id="editPanel" class="editor" style="display:none">
-          <div class="sep"></div>
-          <h3>编辑（本机，不会上传）</h3>
-          <div class="tips">
-            - 这里的更改只保存在你的浏览器本地。<br>
-            - 点击“导出 JSON”后，把 <code class="k">products.json</code> 上传到你的 GitHub 仓库即可对外生效。<br>
-            - 勾选“嵌入图片（Base64）”最省心：只要上传一个 JSON 文件，无需单独上传图片。
+    <main class="wrap">
+      <div class="layout">
+        <aside aria-label="侧边筛选">
+          <h3 data-i18n="quick_filter">快速筛选</h3>
+          
+          <div class="filter-group">
+            <div class="pill" data-i18n="price_range">价格区间 (USD)</div>
+            <div class="range" style="margin-top:8px">
+              <input id="min" type="number" min="0" placeholder="最低" data-placeholder-i18n="minimum" />
+              <input id="max" type="number" min="0" placeholder="最高" data-placeholder-i18n="maximum" />
+            </div>
+            <div class="range-value" id="priceRangeText">0 - 不限</div>
           </div>
-          <div class="row">
-            <button class="btn primary mini" id="btnNew">+ 新建条目</button>
-            <button class="btn mini" id="btnImport">导入 JSON</button>
-            <button class="btn mini" id="btnSaveLocal">保存到本机(localStorage)</button>
-          </div>
-          <div class="row">
-            <label class="switch">
-              <input type="checkbox" id="embedImages" checked />
-              <span>导出时嵌入图片（Base64）</span>
-            </label>
-            <button class="btn mini" id="btnExport">导出 JSON</button>
-          </div>
-          <div id="editList" class="row" style="flex-direction:column; align-items:stretch; gap:8px;"></div>
-        </div>
-      </aside>
-
-      <!-- 列表 -->
-      <section>
-        <div class="panel">
-          <div class="listbar">
-            <div class="meta"><span id="count">0</span> 个结果</div>
-            <div class="pager">
-              <button class="btn mini" id="prev">上一页</button>
-              <span class="muted" id="pageInfo">第 1/1 页</span>
-              <button class="btn mini" id="next">下一页</button>
+          
+          <div class="filter-group">
+            <div class="header">
+              <div class="pill" data-i18n="condition">成色/状态</div>
+              <span class="more" onclick="toggleFilter(this)" data-i18n="more">更多</span>
+            </div>
+            <div class="chips" id="cond">
+              <label class="chip"><input type="checkbox" value="A"><span data-i18n="grade_a">A 级（9成新）</span></label>
+              <label class="chip"><input type="checkbox" value="B"><span data-i18n="grade_b">B 级（7-8成新）</span></label>
+              <label class="chip"><input type="checkbox" value="C"><span data-i18n="grade_c">C 级（需保养）</span></label>
+              <label class="chip"><input type="checkbox" value="D"><span data-i18n="grade_d">D 级（维修件）</span></label>
             </div>
           </div>
-          <div id="grid" class="grid"></div>
-        </div>
-      </section>
-    </div>
-  </main>
+          
+          <div class="filter-group">
+            <div class="header">
+              <div class="pill" data-i18n="accessories">是否含配套</div>
+              <span class="more" onclick="toggleFilter(this)" data-i18n="more">更多</span>
+            </div>
+            <div class="chips" id="bundles">
+              <label class="chip"><input type="checkbox" value="热流道" data-i18n-value="hot_runner">热流道</label>
+              <label class="chip"><input type="checkbox" value="顶针/斜顶" data-i18n-value="ejector_pins">顶针/斜顶</label>
+              <label class="chip"><input type="checkbox" value="钢证/图纸" data-i18n-value="certificates">钢证/图纸</label>
+              <label class="chip"><input type="checkbox" value="导柱导套" data-i18n-value="guide_pillars">导柱导套</label>
+              <label class="chip"><input type="checkbox" value="冷却系统" data-i18n-value="cooling_system">冷却系统</label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <div class="header">
+              <div class="pill" data-i18n="mould_parameters">模具参数</div>
+              <span class="more" onclick="toggleFilter(this)" data-i18n="more">更多</span>
+            </div>
+            <div class="chips" id="params">
+              <label class="chip"><input type="checkbox" value="单腔" data-i18n-value="single_cavity">单腔</label>
+              <label class="chip"><input type="checkbox" value="多腔" data-i18n-value="multi_cavity">多腔</label>
+              <label class="chip"><input type="checkbox" value="大型" data-i18n-value="large_size">大型 (>50kg)</label>
+              <label class="chip"><input type="checkbox" value="中型" data-i18n-value="medium_size">中型 (20-50kg)</label>
+              <label class="chip"><input type="checkbox" value="小型" data-i18n-value="small_size">小型 (<20kg)</label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <div class="pill" data-i18n="years_of_use">使用年限</div>
+            <div class="chips" id="years">
+              <label class="chip"><input type="checkbox" value="1"><span data-i18n="within_1_year">1年以内</span></label>
+              <label class="chip"><input type="checkbox" value="3"><span data-i18n="1_to_3_years">1-3年</span></label>
+              <label class="chip"><input type="checkbox" value="5"><span data-i18n="3_to_5_years">3-5年</span></label>
+              <label class="chip"><input type="checkbox" value="10"><span data-i18n="over_5_years">5年以上</span></label>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <button class="btn" id="reset" data-i18n="reset_filters">重置筛选</button>
+          </div>
+          <div class="divider"></div>
+          <small data-i18n="search_tip">提示：如需找“遥控碰碰车”或某品牌配件，可在上方搜索栏输入关键字。支持拼音与型号。</small>
+          <div style="margin-top:10px" class="security-lock">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span data-i18n="secured">网站已加密保护</span>
+          </div>
+        </aside>
 
-  <footer>
-    © 2025 Moulds 单页示例 · 数据可存本机或 products.json · 图片可嵌入 JSON 或用相对路径
-  </footer>
+        <section>
+          <div id="count" style="margin:6px 0 12px;color:var(--muted)" data-i18n="loading">载入中…</div>
+          <div id="grid" class="results" aria-live="polite"></div>
+          
+          <!-- 分页控件 -->
+          <div class="pagination" id="pagination">
+            <button class="page-btn" id="prevPage" disabled>←</button>
+            <button class="page-btn active" data-page="1">1</button>
+            <button class="page-btn" data-page="2">2</button>
+            <button class="page-btn" id="nextPage">→</button>
+          </div>
+          
+          <div id="empty" class="empty" hidden data-i18n="no_matches">没有匹配的模具，尝试放宽筛选条件或清空搜索。</div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap" style="padding:20px 0">
+        <div class="grid">
+          <div>
+            <strong data-i18n="company_name">钰垚环球 | Yuyao Terraflow</strong>
+            <p data-i18n="footer_description">一个面向玩具行业的二手模具信息站。我们不参与资金托管。请务必线下验货并签订合同。</p>
+            <div class="security-lock">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span data-i18n="site_protected">本网站受安全保护</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700" data-i18n="quick_links">快速链接</div>
+            <a href="#" onclick="checkAdminAndOpenPost()" data-i18n="post_mould">发布模具</a><br/>
+            <a href="#" onclick="showSafetyTips()" data-i18n="transaction_safety">交易安全</a>
+          </div>
+          <div>
+            <div style="font-weight:700" data-i18n="contact_us">联系我们</div>
+            <a href="mailto:market@toy-moulds.example">market@toy-moulds.example</a><br>
+            <div class="contact-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+              </svg>
+              <span>WhatsApp：+86 16636465384</span>
+            </div>
+            <div class="contact-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+              <span>Facebook：Makebai Cjiuyi</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700" data-i18n="language">语言</div>
+            <button class="lang-switch" style="margin:5px 0" onclick="toggleLanguage('zh')" data-i18n="chinese">中文</button>
+            <button class="lang-switch" style="margin:5px 0" onclick="toggleLanguage('en')" data-i18n="english">英文</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 详情弹窗 -->
+    <dialog id="dlg">
+      <div class="modal-head">
+        <div id="dlg-title" class="title" data-i18n="mould_details">模具详情</div>
+        <button class="btn" onclick="closeDlg()" aria-label="关闭" data-i18n="close">关闭</button>
+      </div>
+      <div class="modal-body" id="dlg-body">
+        <!-- 动态填充详情内容 -->
+      </div>
+      <div class="modal-foot">
+        <a id="dlg-mail" class="btn brand" href="#" target="_blank" data-i18n="contact_seller">联系卖家</a>
+        <button class="btn" onclick="closeDlg()" data-i18n="done">完成</button>
+      </div>
+    </dialog>
+
+    <!-- 概览弹窗（新增） -->
+    <dialog id="overview">
+      <div class="modal-head">
+        <div class="title" data-i18n="overview_title">我的模具产品</div>
+        <button class="btn" onclick="document.getElementById('overview').close()" data-i18n="close">关闭</button>
+      </div>
+      <div class="modal-body">
+        <div id="overviewGrid" class="results"></div>
+      </div>
+    </dialog>
+
+    <!-- 发布模具弹窗 -->
+    <dialog id="post">
+      <div class="modal-head">
+        <div class="title" data-i18n="post_mould_demo">发布模具（演示表单）</div>
+        <button class="btn" onclick="document.getElementById('post').close()" data-i18n="close">关闭</button>
+      </div>
+      <div class="modal-body">
+        <form id="postForm" onsubmit="event.preventDefault(); handleSubmit();">
+          <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr">
+            <label data-i18n="title">标题<input id="postTitle" required style="width:100%" class="btn" placeholder="如：1:16 遥控车外壳注塑模具" data-placeholder-i18n="title_placeholder"/></label>
+            <label data-i18n="category">类目<select id="postCategory" required class="btn" style="width:100%">
+              <option data-i18n="car_models">车模</option>
+              <option data-i18n="building_blocks">积木</option>
+              <option data-i18n="dolls">娃娃/公仔</option>
+              <option data-i18n="balls">球类</option>
+              <option data-i18n="water_guns">水枪/水具</option>
+              <option data-i18n="gears">齿轮/配件</option>
+            </select></label>
+            <label data-i18n="process">工艺<select id="postProcess" class="btn" style="width:100%">
+              <option data-i18n="injection_molding">注塑</option>
+              <option data-i18n="blow_molding">吹塑</option>
+              <option data-i18n="die_casting">压铸</option>
+            </select></label>
+            <label data-i18n="price_usd">价格 (USD)<input id="postPrice" type="number" class="btn" style="width:100%"/></label>
+            <label data-i18n="material">钢材<select id="postMaterial" class="btn" style="width:100%">
+              <option>P20</option>
+              <option>H13</option>
+              <option>718H</option>
+              <option>NAK80</option>
+            </select></label>
+            <label data-i18n="shot_count">出模次数<input id="postShots" type="number" class="btn" style="width:100%" placeholder="如 15000" data-placeholder-i18n="shot_count_placeholder"/></label>
+            <label data-i18n="years_of_use">使用年限<select id="postYears" class="btn" style="width:100%">
+              <option data-i18n="within_1_year">1年以内</option>
+              <option data-i18n="1_to_3_years">1-3年</option>
+              <option data-i18n="3_to_5_years">3-5年</option>
+              <option data-i18n="over_5_years">5年以上</option>
+            </select></label>
+            <label data-i18n="mould_weight">模具重量<select id="postWeight" class="btn" style="width:100%">
+              <option data-i18n="small_size">小型 (&lt;20kg)</option>
+              <option data-i18n="medium_size">中型 (20-50kg)</option>
+              <option data-i18n="large_size">大型 (&gt;50kg)</option>
+            </select></label>
+            <label style="grid-column:1/ -1" data-i18n="description">描述<textarea id="postDesc" class="btn" style="width:100%;min-height:80px" placeholder="尺寸、腔数、浇口、顶出、随行配件…" data-placeholder-i18n="description_placeholder"></textarea></label>
+            
+            <!-- 图片上传区域 -->
+            <div class="image-upload">
+              <h4 data-i18n="upload_images">上传图片（最多5张）</h4>
+              <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <p class="upload-text" data-i18n="upload_text1">点击或拖拽图片到此处上传</p>
+                <p class="upload-text" data-i18n="upload_text2">支持 JPG、PNG 格式，单张不超过5MB</p>
+                <input type="file" id="fileInput" class="file-input" accept="image/jpeg, image/png" multiple />
+              </div>
+              
+              <div class="preview-container" id="previewContainer"></div>
+              <p class="upload-limit" id="uploadLimit" data-i18n="image_limit">已选择 0/5 张图片</p>
+            </div>
+          </div>
+          <div style="margin-top:12px;text-align:right"><button class="btn brand" type="submit" data-i18n="submit">提交</button></div>
+        </form>
+      </div>
+    </dialog>
+    
+    <!-- 管理员登录弹窗 -->
+    <dialog id="adminLogin">
+      <div class="modal-head">
+        <div class="title" data-i18n="admin_login">管理员登录</div>
+        <button class="btn" onclick="document.getElementById('adminLogin').close()" data-i18n="close">关闭</button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm" onsubmit="event.preventDefault(); handleAdminLogin();">
+          <div class="login-form">
+            <label data-i18n="username">用户名</label>
+            <input type="text" id="adminUser" required>
+            
+            <label data-i18n="password">密码</label>
+            <input type="password" id="adminPass" required>
+            
+            <button class="btn brand" type="submit" data-i18n="login">登录</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  </div>
 
   <script>
-  // ====== 数据与状态 ======
-  const LS_KEY_MAIN = 'productsData';      // 本工具使用的key
-  const LS_KEY_OLD  = 'dynamicData';       // 兼容之前的key
-  let state = {
-    all: [],
-    filtered: [],
-    page: 1,
-    perPage: 12,
-    sort: 'latest',
-    filters: { q:'', category:'', process:[], material:[], minPrice:'', maxPrice:''},
-    editMode: false
+  // 国际化文本数据
+  const i18n = {
+    zh: {
+      company_name: "钰垚环球 | Yuyao Terraflow",
+      future_market: "未来玩具模具交易市场 • 2077",
+      enter_market: "进入市场",
+      mould_market: "模具市场",
+      post_mould: "发布模具",
+      safety_guide: "安全指南",
+      focus_on_toy_moulds: "专注玩具类目的二手模具",
+      browse_and_filter: "浏览、筛选并联系卖家。支持：注塑 / 吹塑 / 压铸；类目覆盖：车模、积木、娃娃、球类、水枪等。",
+      selected: "已选：",
+      search_placeholder: "搜索关键词，如 “遥控车外壳” / 材质 / 型号",
+      all_categories: "全部类目",
+      car_models: "车模",
+      building_blocks: "积木",
+      dolls: "娃娃/公仔",
+      balls: "球类",
+      water_guns: "水枪/水具",
+      board_games: "桌游/棋类",
+      gears: "齿轮/配件",
+      all_processes: "全部工艺",
+      injection_molding: "注塑",
+      blow_molding: "吹塑",
+      die_casting: "压铸",
+      all_materials: "钢材",
+      newest: "最新发布",
+      price_low_to_high: "价格从低到高",
+      price_high_to_low: "价格从高到低",
+      shot_count: "出模次数（少→多）",
+      apply: "应用",
+      quick_filter: "快速筛选",
+      price_range: "价格区间 (USD)",
+      minimum: "最低",
+      maximum: "最高",
+      condition: "成色/状态",
+      more: "更多",
+      grade_a: "A 级（9成新）",
+      grade_b: "B 级（7-8成新）",
+      grade_c: "C 级（需保养）",
+      grade_d: "D 级（维修件）",
+      accessories: "是否含配套",
+      hot_runner: "热流道",
+      ejector_pins: "顶针/斜顶",
+      certificates: "钢证/图纸",
+      guide_pillars: "导柱导套",
+      cooling_system: "冷却系统",
+      mould_parameters: "模具参数",
+      single_cavity: "单腔",
+      multi_cavity: "多腔",
+      large_size: "大型 (>50kg)",
+      medium_size: "中型 (20-50kg)",
+      small_size: "小型 (<20kg)",
+      years_of_use: "使用年限",
+      within_1_year: "1年以内",
+      "1_to_3_years": "1-3年",
+      "3_to_5_years": "3-5年",
+      over_5_years: "5年以上",
+      reset_filters: "重置筛选",
+      search_tip: "提示：如需找“遥控碰碰车”或某品牌配件，可在上方搜索栏输入关键字。支持拼音与型号。",
+      secured: "网站已加密保护",
+      loading: "载入中…",
+      no_matches: "没有匹配的模具，尝试放宽筛选条件或清空搜索。",
+      footer_description: "一个面向玩具行业的二手模具信息站。我们不参与资金托管。请务必线下验货并签订合同。",
+      quick_links: "快速链接",
+      transaction_safety: "交易安全",
+      contact_us: "联系我们",
+      site_protected: "本网站受安全保护",
+      language: "语言",
+      chinese: "中文",
+      english: "英文",
+      mould_details: "模具详情",
+      close: "关闭",
+      contact_seller: "联系卖家",
+      done: "完成",
+      post_mould_demo: "发布模具（演示表单）",
+      title: "标题",
+      title_placeholder: "如：1:16 遥控车外壳注塑模具",
+      category: "类目",
+      process: "工艺",
+      price_usd: "价格 (USD)",
+      material: "钢材",
+      shot_count_placeholder: "如 15000",
+      mould_weight: "模具重量",
+      description: "描述",
+      description_placeholder: "尺寸、腔数、浇口、顶出、随行配件…",
+      upload_images: "上传图片（最多5张）",
+      upload_text1: "点击或拖拽图片到此处上传",
+      upload_text2: "支持 JPG、PNG 格式，单张不超过5MB",
+      image_limit: "已选择 0/5 张图片",
+      submit: "提交",
+      admin_login: "管理员登录",
+      username: "用户名",
+      password: "密码",
+      login: "登录",
+      logout: "退出",
+      my_products: "我的模具产品",
+      overview_title: "我的模具产品"
+    },
+    en: {
+      company_name: "Yuyao Terraflow | 钰垚环球",
+      future_market: "Future Toy Mould Market • 2077",
+      enter_market: "Enter Market",
+      mould_market: "Mould Market",
+      post_mould: "Post Mould",
+      safety_guide: "Safety Guide",
+      focus_on_toy_moulds: "Specializing in second-hand toy moulds",
+      browse_and_filter: "Browse, filter and contact sellers. Supported: Injection / Blow / Die casting; Categories: Car models, Building blocks, Dolls, Balls, Water guns, etc.",
+      selected: "Selected:",
+      search_placeholder: "Search keywords, e.g. 'remote control car shell' / material / model",
+      all_categories: "All Categories",
+      car_models: "Car Models",
+      building_blocks: "Building Blocks",
+      dolls: "Dolls/Figures",
+      balls: "Balls",
+      water_guns: "Water Guns/Toys",
+      board_games: "Board Games",
+      gears: "Gears/Accessories",
+      all_processes: "All Processes",
+      injection_molding: "Injection Molding",
+      blow_molding: "Blow Molding",
+      die_casting: "Die Casting",
+      all_materials: "All Steels",
+      newest: "Newest",
+      price_low_to_high: "Price: Low to High",
+      price_high_to_low: "Price: High to Low",
+      shot_count: "Shot Count (Low → High)",
+      apply: "Apply",
+      quick_filter: "Quick Filter",
+      price_range: "Price Range (USD)",
+      minimum: "Min",
+      maximum: "Max",
+      condition: "Condition",
+      more: "More",
+      grade_a: "Grade A (90% new)",
+      grade_b: "Grade B (70-80% new)",
+      grade_c: "Grade C (Needs maintenance)",
+      grade_d: "Grade D (For parts/repair)",
+      accessories: "Included Accessories",
+      hot_runner: "Hot Runner",
+      ejector_pins: "Ejector Pins",
+      certificates: "Certificates/Drawings",
+      guide_pillars: "Guide Pillars",
+      cooling_system: "Cooling System",
+      mould_parameters: "Mould Parameters",
+      single_cavity: "Single Cavity",
+      multi_cavity: "Multi Cavity",
+      large_size: "Large (>50kg)",
+      medium_size: "Medium (20-50kg)",
+      small_size: "Small (<20kg)",
+      years_of_use: "Years of Use",
+      within_1_year: "Within 1 year",
+      "1_to_3_years": "1-3 years",
+      "3_to_5_years": "3-5 years",
+      over_5_years: "Over 5 years",
+      reset_filters: "Reset Filters",
+      search_tip: "Tip: For specific items like 'remote control bumper cars' or brand accessories, use the search bar above. Supports pinyin and model numbers.",
+      secured: "Site is encrypted and protected",
+      loading: "Loading...",
+      no_matches: "No matching moulds found. Try broadening your filters or clearing your search.",
+      footer_description: "A second-hand mould information site for the toy industry. We do not handle payments. Always inspect goods in person and sign a contract.",
+      quick_links: "Quick Links",
+      transaction_safety: "Transaction Safety",
+      contact_us: "Contact Us",
+      site_protected: "This site is protected",
+      language: "Language",
+      chinese: "Chinese",
+      english: "English",
+      mould_details: "Mould Details",
+      close: "Close",
+      contact_seller: "Contact Seller",
+      done: "Done",
+      post_mould_demo: "Post Mould (Demo Form)",
+      title: "Title",
+      title_placeholder: "e.g. 1:16 Remote Control Car Shell Injection Mould",
+      category: "Category",
+      process: "Process",
+      price_usd: "Price (USD)",
+      material: "Steel",
+      shot_count_placeholder: "e.g. 15000",
+      mould_weight: "Mould Weight",
+      description: "Description",
+      description_placeholder: "Dimensions, cavities, gates, ejection, included accessories...",
+      upload_images: "Upload Images (max 5)",
+      upload_text1: "Click or drag images here to upload",
+      upload_text2: "Supports JPG, PNG formats, max 5MB per image",
+      image_limit: "Selected 0/5 images",
+      submit: "Submit",
+      admin_login: "Admin Login",
+      username: "Username",
+      password: "Password",
+      login: "Login",
+      logout: "Logout",
+      my_products: "My Moulds",
+      overview_title: "My Moulds"
+    }
+  };
+  
+  // 当前语言（默认英文）
+  let currentLang = 'en';
+  document.addEventListener('DOMContentLoaded', () => toggleLanguage('en'));
+  
+  // 切换语言
+  function toggleLanguage(lang) {
+    if (lang) {
+      currentLang = lang;
+    } else {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+    }
+    
+    // 更新语言切换按钮文本
+    const langBtn = document.getElementById('langSwitch');
+    if (langBtn) langBtn.textContent = currentLang === 'zh' ? 'EN' : '中文';
+    
+    // 翻译页面内容
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (i18n[currentLang][key]) {
+        el.textContent = i18n[currentLang][key];
+      }
+    });
+    
+    // 翻译placeholder
+    document.querySelectorAll('[data-placeholder-i18n]').forEach(el => {
+      const key = el.getAttribute('data-placeholder-i18n');
+      if (i18n[currentLang][key]) {
+        el.placeholder = i18n[currentLang][key];
+      }
+    });
+    
+    // 翻译选项
+    document.querySelectorAll('option[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (i18n[currentLang][key]) {
+        el.textContent = i18n[currentLang][key];
+      }
+    });
+    
+    // 翻译标题特殊处理
+    document.querySelectorAll('.cyber-title span').forEach(el => {
+      el.textContent = el.getAttribute(`data-text-${currentLang}`) || el.getAttribute('data-text');
+    });
+    
+    if (state.filteredData.length > 0) {
+      renderCurrentPage();
+    }
+    if (typeof updatePriceRangeText === 'function' && els && els.priceRangeText) {
+      updatePriceRangeText();
+    }
+    if (typeof updateAdminUI === 'function') {
+      updateAdminUI();
+    }
+  }
+
+  // 切换到市场页面
+  function enterMarketplace() {
+    document.getElementById('cover').style.display = 'none';
+    document.getElementById('marketplace').style.display = 'block';
+    initMarketplace();
+  }
+
+  // 数据
+  const DATA = [
+    {
+      id:1,
+      title:"1:16 遥控车外壳注塑模具",
+      title_en:"1:16 RC Car Shell Injection Mould",
+      cat:"车模",
+      cat_en:"Car Models",
+      process:"注塑",
+      process_en:"Injection Molding",
+      material:"P20",
+      shots:12000,
+      price:3800,
+      cond:"A",
+      cond_en:"Grade A",
+      bundle:["顶针/斜顶","钢证/图纸","冷却系统"],
+      bundle_en:["Ejector Pins","Certificates/Drawings","Cooling System"],
+      seller:"sales@rc-moulds.example",
+      sellerName:"RC模具工坊",
+      sellerName_en:"RC Mould Workshop",
+      state:"在售",
+      state_en:"Available",
+      thumb:"car",
+      images:["car1.jpg","car2.jpg","car3.jpg"],
+      year:2,
+      weight:"中型",
+      weight_en:"Medium",
+      cavities:"双腔",
+      cavities_en:"Dual Cavity",
+      size:"350×280×210mm",
+      weightKg:32
+    },
+    {
+      id:2,
+      title:"拼装积木砖 2x4 腔8 注塑模具",
+      title_en:"Building Block 2x4, 8 Cavity Injection Mould",
+      cat:"积木",
+      cat_en:"Building Blocks",
+      process:"注塑",
+      process_en:"Injection Molding",
+      material:"718H",
+      shots:60000,
+      price:5200,
+      cond:"B",
+      cond_en:"Grade B",
+      bundle:["热流道","导柱导套"],
+      bundle_en:["Hot Runner","Guide Pillars"],
+      seller:"lego@blocks.example",
+      sellerName:"积木模具厂",
+      sellerName_en:"Block Mould Factory",
+      state:"在售",
+      state_en:"Available",
+      thumb:"brick",
+      images:["brick1.jpg","brick2.jpg"],
+      year:4,
+      weight:"中型",
+      weight_en:"Medium",
+      cavities:"8腔",
+      cavities_en:"8 Cavities",
+      size:"420×380×250mm",
+      weightKg:45
+    },
+    {
+      id:3,
+      title:"娃娃头部吹塑模具（含热切）",
+      title_en:"Doll Head Blow Mould (with hot cutting)",
+      cat:"娃娃/公仔",
+      cat_en:"Dolls/Figures",
+      process:"吹塑",
+      process_en:"Blow Molding",
+      material:"NAK80",
+      shots:18000,
+      price:4500,
+      cond:"A",
+      cond_en:"Grade A",
+      bundle:["钢证/图纸","冷却系统"],
+      bundle_en:["Certificates/Drawings","Cooling System"],
+      seller:"doll@mfg.example",
+      sellerName:"玩偶制造配件",
+      sellerName_en:"Doll Manufacturing Parts",
+      state:"在售",
+      state_en:"Available",
+      thumb:"doll",
+      images:["doll1.jpg","doll2.jpg","doll3.jpg","doll4.jpg"],
+      year:1,
+      weight:"小型",
+      weight_en:"Small",
+      cavities:"单腔",
+      cavities_en:"Single Cavity",
+      size:"280×220×180mm",
+      weightKg:18
+    },
+    {
+      id:4,
+      title:"EVA球类压铸模具 3腔",
+      title_en:"EVA Ball Die Casting Mould, 3 Cavities",
+      cat:"球类",
+      cat_en:"Balls",
+      process:"压铸",
+      process_en:"Die Casting",
+      material:"H13",
+      shots:9000,
+      price:3100,
+      cond:"B",
+      cond_en:"Grade B",
+      bundle:["顶针/斜顶","导柱导套"],
+      bundle_en:["Ejector Pins","Guide Pillars"],
+      seller:"ball@tooling.example",
+      sellerName:"球类模具工坊",
+      sellerName_en:"Ball Mould Workshop",
+      state:"在售",
+      state_en:"Available",
+      thumb:"ball",
+      images:["ball1.jpg","ball2.jpg"],
+      year:3,
+      weight:"中型",
+      weight_en:"Medium",
+      cavities:"3腔",
+      cavities_en:"3 Cavities",
+      size:"380×320×240mm",
+      weightKg:42
+    },
+    {
+      id:5,
+      title:"水枪外壳注塑模具（双腔）",
+      title_en:"Water Gun Shell Injection Mould (Dual Cavity)",
+      cat:"水枪/水具",
+      cat_en:"Water Guns/Toys",
+      process:"注塑",
+      process_en:"Injection Molding",
+      material:"P20",
+      shots:15000,
+      price:4200,
+      cond:"A",
+      cond_en:"Grade A",
+      bundle:["热流道","钢证/图纸","冷却系统"],
+      bundle_en:["Hot Runner","Certificates/Drawings","Cooling System"],
+      seller:"water@plast.example",
+      sellerName:"水上玩具配件",
+      sellerName_en:"Water Toy Accessories",
+      state:"在售",
+      state_en:"Available",
+      thumb:"gun",
+      images:["gun1.jpg","gun2.jpg","gun3.jpg"],
+      year:2,
+      weight:"中型",
+      weight_en:"Medium",
+      cavities:"双腔",
+      cavities_en:"Dual Cavity",
+      size:"400×350×220mm",
+      weightKg:38
+    },
+    {
+      id:6,
+      title:"桌游棋子注塑模具（含顶针）",
+      title_en:"Board Game Piece Injection Mould (with ejector pins)",
+      cat:"桌游/棋类",
+      cat_en:"Board Games",
+      process:"注塑",
+      process_en:"Injection Molding",
+      material:"718H",
+      shots:25000,
+      price:2400,
+      cond:"C",
+      cond_en:"Grade C",
+      bundle:["顶针/斜顶"],
+      bundle_en:["Ejector Pins"],
+      seller:"board@tool.example",
+      sellerName:"桌游配件厂",
+      sellerName_en:"Board Game Parts Factory",
+      state:"在售",
+      state_en:"Available",
+      thumb:"pawn",
+      images:["pawn1.jpg","pawn2.jpg"],
+      year:5,
+      weight:"小型",
+      weight_en:"Small",
+      cavities:"16腔",
+      cavities_en:"16 Cavities",
+      size:"260×200×150mm",
+      weightKg:15
+    }
+  ];
+
+  // 动态数据与合并函数
+  let DYNAMIC_DATA = [];
+  function getAllData() {
+    return DATA.concat(DYNAMIC_DATA);
+  }
+
+  const $ = (q,root=document)=>root.querySelector(q);
+  const $$ = (q,root=document)=>Array.from(root.querySelectorAll(q));
+
+  // 页面状态管理
+  const state = {
+    currentPage: 1,
+    itemsPerPage: 6,
+    filteredData: [],
+    selectedFilters: {
+      q: '',
+      cat: '',
+      process: '',
+      material: '',
+      min: 0,
+      max: Infinity,
+      cond: [],
+      bundle: [],
+      params: [],
+      years: []
+    },
+    uploadedImages: [],
+    isAdmin: false
   };
 
-  // ====== 工具函数 ======
-  const $ = s => document.querySelector(s);
-  const $$ = s => document.querySelectorAll(s);
-  const fmt = n => (n==null||isNaN(n))?'—':('$'+ Number(n).toLocaleString('en-US', {maximumFractionDigits:2}));
+  let els;
 
-  function uid(){ return 'id-'+Math.random().toString(36).slice(2)+Date.now().toString(36) }
-  function nowISO(){ return new Date().toISOString() }
-  function normalizeItem(x){
-    return {
-      id: x.id || uid(),
-      title: String(x.title||'').trim(),
-      price: Number(x.price||0),
-      currency: (x.currency||'USD').toUpperCase(),
-      category: x.category || '',
-      material: Array.isArray(x.material) ? x.material : (x.material? [String(x.material)] : []),
-      process: Array.isArray(x.process) ? x.process : (x.process? [String(x.process)] : []),
-      condition: x.condition || '',
-      images: Array.isArray(x.images) ? x.images : [],
-      description: String(x.description||''),
-      seller: x.seller || null,
-      createdAt: x.createdAt || nowISO()
+  // 初始化市场页面
+  function initMarketplace() {
+    els = {
+      q:$('#q'),
+      cat:$('#cat'),
+      process:$('#process'),
+      material:$('#material'),
+      sort:$('#sort'),
+      apply:$('#apply'),
+      grid:$('#grid'),
+      count:$('#count'),
+      min:$('#min'),
+      max:$('#max'),
+      empty:$('#empty'),
+      reset:$('#reset'),
+      cond:$('#cond'),
+      bundles:$('#bundles'),
+      params:$('#params'),
+      years:$('#years'),
+      priceRangeText:$('#priceRangeText'),
+      filterTags:$('#filterTags'),
+      pagination:$('#pagination'),
+      prevPage:$('#prevPage'),
+      nextPage:$('#nextPage'),
+      // 图片上传
+      uploadArea: $('#uploadArea'),
+      fileInput: $('#fileInput'),
+      previewContainer: $('#previewContainer'),
+      uploadLimit: $('#uploadLimit'),
+      // 管理员
+      adminLoginBtn: $('#adminLoginBtn')
+    };
+
+    // 载入已发布的本地数据
+    try {
+      const saved = localStorage.getItem('dynamicData');
+      if (saved) DYNAMIC_DATA = JSON.parse(saved);
+    } catch (e) {
+      DYNAMIC_DATA = [];
     }
-  }
 
-  function deepClone(o){ return JSON.parse(JSON.stringify(o)) }
+    // 检查是否已登录管理员
+    checkAdminStatus();
 
-  // 读取本机或 products.json
-  async function loadData(){
-    // 1) 尝试 products.json
-    try{
-      const res = await fetch('products.json', {cache:'no-store'});
-      if(res.ok){
-        const j = await res.json();
-        if(Array.isArray(j)){
-          return j.map(normalizeItem);
-        }else if(j && Array.isArray(j.items)){
-          return j.items.map(normalizeItem);
-        }
-      }
-    }catch(e){ /* 忽略，继续尝试本地 */ }
-
-    // 2) 尝试 localStorage
-    try{
-      const raw = localStorage.getItem(LS_KEY_MAIN) || localStorage.getItem(LS_KEY_OLD);
-      if(raw){
-        const arr = JSON.parse(raw);
-        if(Array.isArray(arr)) return arr.map(normalizeItem);
-      }
-    }catch(e){}
-
-    // 3) 兜底示例
-    const demo = [
-      {
-        title: "注塑模具 A-12",
-        price: 180,
-        category: "Injection",
-        material: ["Steel"],
-        process: ["Injection"],
-        condition: "Used",
-        images: ["https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=1200&auto=format&fit=crop"],
-        description: "入门级注塑模具，适合小批量生产。包含基本配件。",
-        createdAt: "2024-11-01T10:00:00.000Z"
-      },
-      {
-        title: "铝合金压铸模 B-7",
-        price: 420,
-        category: "Compression",
-        material: ["Aluminum"],
-        process: ["Compression"],
-        condition: "New",
-        images: ["https://images.unsplash.com/photo-1581092787767-5e00b4b3c3b2?q=80&w=1200&auto=format&fit=crop"],
-        description: "高精度铝合金模具，表面阳极氧化处理。",
-        createdAt: "2025-02-10T12:00:00.000Z"
-      },
-      {
-        title: "多腔模 C-9",
-        price: 260,
-        category: "Injection",
-        material: ["Steel", "Alloy"],
-        process: ["Injection","Extrusion"],
-        condition: "Used",
-        images: ["https://images.unsplash.com/photo-1581091014534-8987c1f03f2a?q=80&w=1200&auto=format&fit=crop"],
-        description: "多腔位结构，适配标准注塑机，附 CAD 图纸。",
-        createdAt: "2025-03-18T09:20:00.000Z"
-      }
-    ];
-    return demo.map(normalizeItem);
-  }
-
-  function saveLocal(){
-    localStorage.setItem(LS_KEY_MAIN, JSON.stringify(state.all));
-    alert('已保存到本机（localStorage）。此数据仅在本浏览器可见。');
-  }
-
-  // ====== 渲染筛选选项 ======
-  function initFilterOptions(){
-    const cats = [...new Set(state.all.map(i=>i.category).filter(Boolean))].sort();
-    const pros = [...new Set(state.all.flatMap(i=>i.process||[]).filter(Boolean))].sort();
-    const mats = [...new Set(state.all.flatMap(i=>i.material||[]).filter(Boolean))].sort();
-
-    const catSel = $('#category');
-    catSel.innerHTML = '<option value="">分类（全部）</option>' + cats.map(c=>`<option value="${encodeHTML(c)}">${encodeHTML(c)}</option>`).join('');
-
-    const proSel = $('#process');
-    proSel.innerHTML = pros.map(p=>`<option value="${encodeHTML(p)}">${encodeHTML(p)}</option>`).join('');
-
-    const matSel = $('#material');
-    matSel.innerHTML = mats.map(m=>`<option value="${encodeHTML(m)}">${encodeHTML(m)}</option>`).join('');
-  }
-
-  function getMultiSelectValues(sel){
-    return Array.from(sel.selectedOptions).map(o=>o.value);
-  }
-
-  // ====== 过滤、排序、分页 ======
-  function applyFilters(){
-    const f = state.filters;
-    let arr = state.all.slice();
-
-    if(f.q){
-      const q = f.q.toLowerCase();
-      arr = arr.filter(i => (i.title||'').toLowerCase().includes(q) || (i.description||'').toLowerCase().includes(q));
-    }
-    if(f.category){
-      arr = arr.filter(i => i.category === f.category);
-    }
-    if(f.process && f.process.length){
-      arr = arr.filter(i => (i.process||[]).some(p => f.process.includes(p)));
-    }
-    if(f.material && f.material.length){
-      arr = arr.filter(i => (i.material||[]).some(m => f.material.includes(m)));
-    }
-    const min = parseFloat(f.minPrice); const max = parseFloat(f.maxPrice);
-    if(!isNaN(min)){ arr = arr.filter(i => (i.price||0) >= min) }
-    if(!isNaN(max)){ arr = arr.filter(i => (i.price||0) <= max) }
-
-    // 排序
-    const sort = state.sort;
-    arr.sort((a,b)=>{
-      if(sort==='priceAsc') return (a.price||0)-(b.price||0);
-      if(sort==='priceDesc') return (b.price||0)-(a.price||0);
-      if(sort==='nameAsc') return (a.title||'').localeCompare(b.title||'','zh');
-      // latest
-      return new Date(b.createdAt||0) - new Date(a.createdAt||0);
-    });
-
-    state.filtered = arr;
-  }
-
-  function paginate(){
-    const total = state.filtered.length;
-    const pages = Math.max(1, Math.ceil(total / state.perPage));
-    if(state.page > pages) state.page = pages;
-    const start = (state.page - 1) * state.perPage;
-    const end = start + state.perPage;
-    const items = state.filtered.slice(start, end);
-
-    $('#count').textContent = total;
-    $('#pageInfo').textContent = `第 ${state.page}/${pages} 页`;
-    return items;
-  }
-
-  // ====== 渲染列表 ======
-  function encodeHTML(s){
-    return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  }
-  function firstImage(arr){ return (arr && arr.length) ? arr[0] : '' }
-
-  function renderList(){
+    // 初始化图片上传功能
+    initImageUpload();
+    
+    // 设置事件监听器
+    setupEventListeners();
+    
+    // 初始渲染
+    updatePriceRangeText();
     applyFilters();
-    const items = paginate();
-    const el = $('#grid');
-    el.innerHTML = items.map(cardHTML).join('') || `<div class="muted">没有结果，试试调整筛选条件。</div>`;
   }
 
-  function cardHTML(i){
-    const cover = firstImage(i.images);
-    const tags = []
-    if(i.category) tags.push(i.category);
-    if(i.process && i.process.length) tags.push(...i.process);
-    if(i.material && i.material.length) tags.push(...i.material);
-    return `
-      <article class="card">
-        <div class="thumb">
-          ${cover ? `<img loading="lazy" src="${encodeHTML(cover)}" alt="${encodeHTML(i.title)}" />` : ''}
-          <div class="price">${fmt(i.price)}</div>
-        </div>
-        <div class="body">
-          <div class="name">${encodeHTML(i.title||'未命名')}</div>
-          <div class="badges">
-            ${tags.slice(0,4).map(t=>`<span class="badge">${encodeHTML(t)}</span>`).join('')}
-          </div>
-          <div class="desc">${encodeHTML(i.description||'')}</div>
-        </div>
-      </article>
-    `;
+  // 检查管理员状态
+  function checkAdminStatus() {
+    state.isAdmin = localStorage.getItem('isAdmin') === 'true';
+    updateAdminUI();
   }
 
-  // ====== 事件绑定 ======
-  function bindUI(){
-    // 筛选
-    $('#q').addEventListener('input', e => { state.filters.q = e.target.value.trim(); state.page=1; renderList(); });
-    $('#category').addEventListener('change', e => { state.filters.category = e.target.value; state.page=1; renderList(); });
-    $('#process').addEventListener('change', e => { state.filters.process = getMultiSelectValues(e.target); state.page=1; renderList(); });
-    $('#material').addEventListener('change', e => { state.filters.material = getMultiSelectValues(e.target); state.page=1; renderList(); });
-    $('#minPrice').addEventListener('input', e => { state.filters.minPrice = e.target.value; state.page=1; renderList(); });
-    $('#maxPrice').addEventListener('input', e => { state.filters.maxPrice = e.target.value; state.page=1; renderList(); });
-    $('#sort').addEventListener('change', e => { state.sort = e.target.value; state.page=1; renderList(); });
-    $('#perPage').addEventListener('change', e => { state.perPage = parseInt(e.target.value)||12; state.page=1; renderList(); });
-    $('#btnReset').addEventListener('click', ()=>{
-      state.filters = { q:'', category:'', process:[], material:[], minPrice:'', maxPrice:'' };
-      $('#q').value = ''; $('#category').value=''; selectClear($('#process')); selectClear($('#material'));
-      $('#minPrice').value=''; $('#maxPrice').value='';
-      state.page=1; renderList();
-    });
-
-    // 翻页
-    $('#prev').addEventListener('click', ()=>{ if(state.page>1){ state.page--; renderList(); }});
-    $('#next').addEventListener('click', ()=>{
-      const pages = Math.max(1, Math.ceil(state.filtered.length / state.perPage));
-      if(state.page<pages){ state.page++; renderList(); }
-    });
-
-    // 编辑模式开关
-    $('#toggleEdit').checked = state.editMode;
-    $('#toggleEdit').addEventListener('change', e=>{
-      state.editMode = e.target.checked;
-      if(state.editMode) location.hash = '#edit'; else history.replaceState(null,'', location.pathname + location.search);
-      renderEditPanel();
-    });
-
-    // 重新加载（从 products.json）
-    $('#btnReload').addEventListener('click', async ()=>{
-      state.all = await loadData();
-      initFilterOptions();
-      state.page=1; renderList();
-      if(state.editMode) renderEditPanel();
-    });
-
-    // 编辑按钮
-    $('#btnNew').addEventListener('click', ()=> openEditor());
-    $('#btnImport').addEventListener('click', importJSON);
-    $('#btnExport').addEventListener('click', exportJSON);
-    $('#btnSaveLocal').addEventListener('click', saveLocal);
+  // 更新管理员UI
+  function updateAdminUI() {
+    if (!els || !els.adminLoginBtn) return;
+    if (state.isAdmin) {
+      els.adminLoginBtn.textContent = i18n[currentLang]['logout'] || '退出';
+      els.adminLoginBtn.onclick = logoutAdmin;
+    } else {
+      els.adminLoginBtn.textContent = i18n[currentLang]['admin_login'] || '管理员登录';
+      els.adminLoginBtn.onclick = openAdminLogin;
+    }
   }
 
-  function selectClear(sel){
-    Array.from(sel.options).forEach(o=>o.selected=false);
+  // 管理员登录
+  function handleAdminLogin() {
+    const username = $('#adminUser').value;
+    const password = $('#adminPass').value;
+    if (username === 'admin' && password === 'admin123') {
+      localStorage.setItem('isAdmin', 'true');
+      state.isAdmin = true;
+      document.getElementById('adminLogin').close();
+      updateAdminUI();
+      alert(currentLang === 'zh' ? '登录成功' : 'Login successful');
+    } else {
+      alert(currentLang === 'zh' ? '用户名或密码错误' : 'Incorrect username or password');
+    }
   }
 
-  // ====== 编辑面板 ======
-  function renderEditPanel(){
-    const p = $('#editPanel');
-    p.style.display = state.editMode ? '' : 'none';
-    if(!state.editMode) return;
+  // 管理员登出
+  function logoutAdmin() {
+    if (confirm(currentLang === 'zh' ? '确定要退出管理员登录吗？' : 'Are you sure you want to log out?')) {
+      localStorage.removeItem('isAdmin');
+      state.isAdmin = false;
+      updateAdminUI();
+    }
+  }
 
-    const list = state.all;
-    const el = $('#editList');
-    if(!list.length){ el.innerHTML = `<div class="muted">还没有条目，点击“新建条目”。</div>`; return; }
-    el.innerHTML = list.map((it, idx)=>{
-      const img = firstImage(it.images);
-      return `
-        <div class="panel" style="display:flex; align-items:center; gap:10px;">
-          <div class="thumb" style="width:120px; height:80px; border-radius:10px; overflow:hidden;">
-            ${img? `<img src="${encodeHTML(img)}" alt="">` : ''}
-          </div>
-          <div style="flex:1;">
-            <div><strong>${encodeHTML(it.title||'未命名')}</strong></div>
-            <div class="muted">${fmt(it.price)} · ${encodeHTML(it.category||'无分类')}</div>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn mini" onclick="openEditor('${it.id}')">编辑</button>
-            <button class="btn mini" onclick="moveItem('${it.id}',-1)">上移</button>
-            <button class="btn mini" onclick="moveItem('${it.id}',1)">下移</button>
-            <button class="btn danger mini" onclick="delItem('${it.id}')">删除</button>
-          </div>
+  // 检查管理员权限并打开发布页面
+  function checkAdminAndOpenPost() {
+    if (state.isAdmin) {
+      openPost();
+    } else {
+      alert(currentLang === 'zh' ? '请先以管理员身份登录才能发布模具' : 'Please log in as admin to post moulds');
+      openAdminLogin();
+    }
+  }
+
+  // 打开概览（新增）
+  function openOverview() {
+    const grid = document.getElementById('overviewGrid');
+    grid.innerHTML = '';
+    getAllData().forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb" style="cursor:pointer" data-id="${item.id}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <div class="pic-count">${item.images.length}</div>
         </div>
       `;
-    }).join('');
-  }
-
-  function findIndexById(id){ return state.all.findIndex(x=>x.id===id) }
-
-  function moveItem(id, delta){
-    const i = findIndexById(id);
-    if(i<0) return;
-    const j = i + delta;
-    if(j<0 || j>=state.all.length) return;
-    const tmp = state.all[i]; state.all[i] = state.all[j]; state.all[j] = tmp;
-    renderEditPanel(); renderList();
-  }
-  function delItem(id){
-    if(!confirm('确认删除该条目？')) return;
-    const i = findIndexById(id);
-    if(i>=0) state.all.splice(i,1);
-    renderEditPanel(); renderList();
-  }
-
-  // 弹窗编辑器（简易实现）
-  function openEditor(id=null){
-    const idx = id ? findIndexById(id) : -1;
-    const item = idx>=0 ? deepClone(state.all[idx]) : normalizeItem({title:'', price:0, category:'', material:[], process:[], condition:'', images:[], description:''});
-
-    const html = `
-      <div id="modal" style="position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1000;">
-        <div class="panel" style="width:min(920px, 92vw); max-height:90vh; overflow:auto;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3>${idx>=0 ? '编辑条目' : '新建条目'}</h3>
-            <button class="btn mini" onclick="closeModal()">关闭</button>
-          </div>
-
-          <div class="editor">
-            <div class="grid2">
-              <div class="row"><input id="f_title" class="input" placeholder="名称" value="${encodeHTML(item.title)}"></div>
-              <div class="row"><input id="f_price" class="input" placeholder="价格（USD）" type="number" min="0" step="1" value="${item.price||0}"></div>
-              <div class="row"><input id="f_category" class="input" placeholder="分类（例：Injection）" value="${encodeHTML(item.category)}"></div>
-              <div class="row"><input id="f_condition" class="input" placeholder="成色（例：New/Used）" value="${encodeHTML(item.condition)}"></div>
-            </div>
-            <div class="row"><input id="f_material" class="input" placeholder="材质（逗号分隔）" value="${encodeHTML(item.material.join(', '))}"></div>
-            <div class="row"><input id="f_process" class="input" placeholder="工艺（逗号分隔）" value="${encodeHTML(item.process.join(', '))}"></div>
-            <div class="row"><textarea id="f_desc" class="input" placeholder="描述" rows="5">${encodeHTML(item.description)}</textarea></div>
-
-            <div class="sep"></div>
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <h3>图片</h3>
-              <div class="muted">可混合使用远程URL与本地上传图。导出JSON时可选择是否嵌入图片。</div>
-            </div>
-            <div class="row">
-              <input id="f_img_url" class="input" placeholder="粘贴图片 URL 后点击添加">
-              <button class="btn mini" onclick="addImageURL()">添加URL</button>
-              <input id="f_img_file" type="file" accept="image/*" multiple style="display:none" />
-              <button class="btn mini" onclick="document.getElementById('f_img_file').click()">上传文件</button>
-            </div>
-            <div class="imgs" id="imgs">
-              ${item.images.map((src, i)=>imgBox(src, i)).join('')}
-            </div>
-
-            <div class="sep"></div>
-            <div class="row" style="justify-content:flex-end; gap:8px;">
-              ${idx>=0 ? `<button class="btn danger" onclick="delItem('${item.id}'); closeModal()">删除</button>` : ''}
-              <button class="btn primary" onclick="saveEditor('${item.id||''}')">保存</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', html);
-
-    // 绑定文件上传
-    const fileInput = document.getElementById('f_img_file');
-    fileInput.addEventListener('change', async (e)=>{
-      const files = Array.from(e.target.files||[]);
-      for(const f of files){
-        const dataURL = await fileToDataURL(f);
-        item.images.push(dataURL); // 用于预览和可选的嵌入导出
-      }
-      document.getElementById('imgs').innerHTML = item.images.map((src,i)=>imgBox(src,i)).join('');
-      e.target.value = '';
-      window.__currentEditingItem = item;
+      grid.appendChild(card);
     });
-
-    window.__currentEditingItem = item;
-  }
-
-  function closeModal(){
-    const m = document.getElementById('modal');
-    if(m) m.remove();
-    window.__currentEditingItem = null;
-  }
-
-  function imgBox(src, i){
-    return `
-      <div class="ph">
-        <img src="${encodeHTML(src)}" alt="">
-        <div class="tools">
-          <button class="btn mini" onclick="moveImg(${i},-1)">↑</button>
-          <button class="btn mini" onclick="moveImg(${i},1)">↓</button>
-          <button class="btn danger mini" onclick="delImg(${i})">删</button>
-        </div>
-      </div>
-    `;
-  }
-
-  function moveImg(i, d){
-    const item = window.__currentEditingItem;
-    if(!item) return;
-    const j = i+d; if(j<0 || j>=item.images.length) return;
-    const t = item.images[i]; item.images[i]=item.images[j]; item.images[j]=t;
-    document.getElementById('imgs').innerHTML = item.images.map((src,k)=>imgBox(src,k)).join('');
-  }
-  function delImg(i){
-    const item = window.__currentEditingItem;
-    if(!item) return;
-    item.images.splice(i,1);
-    document.getElementById('imgs').innerHTML = item.images.map((src,k)=>imgBox(src,k)).join('');
-  }
-  function addImageURL(){
-    const input = document.getElementById('f_img_url');
-    const url = input.value.trim();
-    if(!url) return;
-    const item = window.__currentEditingItem;
-    item.images.push(url);
-    document.getElementById('imgs').innerHTML = item.images.map((src,k)=>imgBox(src,k)).join('');
-    input.value='';
-  }
-
-  async function fileToDataURL(file){
-    return new Promise((resolve,reject)=>{
-      const r = new FileReader();
-      r.onload = ()=> resolve(r.result);
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-  }
-
-  function saveEditor(existingId){
-    const item = window.__currentEditingItem;
-    if(!item) return;
-
-    const title = document.getElementById('f_title').value.trim();
-    const price = parseFloat(document.getElementById('f_price').value||'0');
-    const category = document.getElementById('f_category').value.trim();
-    const condition = document.getElementById('f_condition').value.trim();
-    const material = document.getElementById('f_material').value.split(',').map(s=>s.trim()).filter(Boolean);
-    const process = document.getElementById('f_process').value.split(',').map(s=>s.trim()).filter(Boolean);
-    const description = document.getElementById('f_desc').value;
-
-    item.title = title; item.price = isNaN(price)?0:price; item.category = category; item.condition = condition;
-    item.material = material; item.process = process; item.description = description;
-    if(!item.createdAt) item.createdAt = nowISO();
-
-    // 新建或覆盖
-    if(existingId){
-      const i = findIndexById(existingId);
-      if(i>=0) state.all[i] = normalizeItem({...state.all[i], ...item, id:existingId});
-    }else{
-      state.all.unshift(normalizeItem(item));
-    }
-    renderEditPanel(); renderList(); closeModal();
-  }
-
-  // 导入/导出 JSON
-  function importJSON(){
-    const input = document.createElement('input');
-    input.type='file'; input.accept='application/json';
-    input.onchange = async e=>{
-      const f = e.target.files[0]; if(!f) return;
-      const text = await f.text();
-      try{
-        const j = JSON.parse(text);
-        const arr = Array.isArray(j) ? j : (Array.isArray(j.items) ? j.items : []);
-        if(!arr.length) throw new Error('JSON 格式不正确：不是数组或 items 数组为空');
-        state.all = arr.map(normalizeItem);
-        initFilterOptions(); state.page=1; renderList(); renderEditPanel();
-        alert('导入成功');
-      }catch(err){
-        alert('导入失败：'+err.message);
-      }
+    grid.onclick = (e) => {
+      const t = e.target.closest('.thumb[data-id]');
+      if (!t) return;
+      document.getElementById('overview').close();
+      openDetails(t.dataset.id);
     };
-    input.click();
+    document.getElementById('overview').showModal();
   }
 
-  function exportJSON(){
-    const embed = document.getElementById('embedImages').checked;
-    let data = deepClone(state.all);
+  // 打开管理员登录窗口
+  function openAdminLogin() {
+    document.getElementById('adminLogin').showModal();
+  }
 
-    if(!embed){
-      // 不嵌入图片：仅导出当前 images 字段（可包含URL或相对路径）
-      // 不修改
-    }else{
-      // 保持 dataURL 或 URL 原样；若是本机 file:// 预览生成的 object URL（blob:）建议过滤掉
-      data = data.map(it=>{
-        it.images = (it.images||[]).filter(u => typeof u==='string' && !u.startsWith('blob:'));
-        return it;
+  // 打开发布窗口
+  function openPost() {
+    document.getElementById('post').showModal();
+  }
+
+  // 关闭详情窗口
+  function closeDlg() {
+    document.getElementById('dlg').close();
+  }
+
+  // 显示安全提示
+  function showSafetyTips() {
+    alert(currentLang === 'zh' ? '交易安全提示：请务必线下验货并签订正规合同' : 'Safety Tips: Always inspect goods in person and sign a formal contract');
+  }
+
+  // 设置事件监听器
+  function setupEventListeners() {
+    els.apply.addEventListener('click', applyFilters);
+    els.cond.addEventListener('click', chipToggle);
+    els.bundles.addEventListener('click', chipToggle);
+    els.params.addEventListener('click', chipToggle);
+    els.years.addEventListener('click', chipToggle);
+    
+    els.reset.addEventListener('click', () => {
+      els.q.value = '';
+      els.cat.value = '';
+      els.process.value = '';
+      els.material.value = '';
+      els.min.value = '';
+      els.max.value = '';
+      els.sort.value = 'new';
+      
+      $$('.chip.active').forEach(c => c.classList.remove('active'));
+      $$('.chip input:checked').forEach(i => i.checked = false);
+      
+      updatePriceRangeText();
+      applyFilters();
+    });
+
+    $('#grid').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-id]');
+      if (btn) {
+        openDetails(btn.dataset.id);
+      }
+    });
+
+    // 分页控制
+    els.prevPage.addEventListener('click', () => {
+      if (state.currentPage > 1) {
+        state.currentPage--;
+        renderPagination();
+        renderCurrentPage();
+      }
+    });
+
+    els.nextPage.addEventListener('click', () => {
+      const totalPages = Math.ceil(state.filteredData.length / state.itemsPerPage);
+      if (state.currentPage < totalPages) {
+        state.currentPage++;
+        renderPagination();
+        renderCurrentPage();
+      }
+    });
+
+    // 价格区间输入事件
+    els.min.addEventListener('input', () => {
+      updatePriceRangeText();
+      clearTimeout(window.priceTimer);
+      window.priceTimer = setTimeout(applyFilters, 500);
+    });
+
+    els.max.addEventListener('input', () => {
+      updatePriceRangeText();
+      clearTimeout(window.priceTimer);
+      window.priceTimer = setTimeout(applyFilters, 500);
+    });
+
+    // 搜索输入事件
+    els.q.addEventListener('input', () => {
+      clearTimeout(window.searchTimer);
+      window.searchTimer = setTimeout(applyFilters, 500);
+    });
+
+    // 下拉框变化事件
+    ['cat', 'process', 'material', 'sort'].forEach(id => {
+      els[id].addEventListener('change', applyFilters);
+    });
+  }
+
+  // 初始化图片上传功能
+  function initImageUpload() {
+    if (!els.uploadArea) return;
+    els.uploadArea.addEventListener('click', () => {
+      els.fileInput.click();
+    });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      els.uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      els.uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      els.uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+      els.uploadArea.style.borderColor = 'var(--brand)';
+      els.uploadArea.style.backgroundColor = 'rgba(77, 211, 255, 0.1)';
+    }
+
+    function unhighlight() {
+      els.uploadArea.style.borderColor = '#2a3a52';
+      els.uploadArea.style.backgroundColor = 'transparent';
+    }
+
+    els.fileInput.addEventListener('change', handleFiles);
+    els.uploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleImageFiles(files);
+    }
+
+    function handleFiles() {
+      handleImageFiles(this.files);
+    }
+
+    function handleImageFiles(files) {
+      const remainingSlots = 5 - state.uploadedImages.length;
+      if (files.length > remainingSlots) {
+        alert(currentLang === 'zh' 
+          ? `最多只能上传5张图片，还可以上传${remainingSlots}张` 
+          : `Maximum 5 images allowed, you can upload ${remainingSlots} more`);
+        return;
+      }
+
+      Array.from(files).forEach(file => {
+        if (!file.type.match('image.*')) {
+          alert(currentLang === 'zh' ? '请上传图片文件' : 'Please upload image files only');
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          alert(currentLang === 'zh' ? '图片大小不能超过5MB' : 'Image size cannot exceed 5MB');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.uploadedImages.push({
+            id: Date.now() + Math.random(),
+            src: e.target.result,
+            file: file
+          });
+          updatePreview();
+        }
+        reader.readAsDataURL(file);
       });
     }
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'products.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
+    function updatePreview() {
+      els.previewContainer.innerHTML = '';
+      state.uploadedImages.forEach(img => {
+        const previewItem = document.createElement('div');
+        previewItem.className = 'preview-item';
+        previewItem.innerHTML = `
+          <img src="${img.src}" class="preview-img" alt="Preview">
+          <button class="remove-img" data-id="${img.id}">×</button>
+        `;
+        els.previewContainer.appendChild(previewItem);
+      });
+
+      els.uploadLimit.textContent = currentLang === 'zh' 
+        ? `已选择 ${state.uploadedImages.length}/5 张图片` 
+        : `Selected ${state.uploadedImages.length}/5 images`;
+
+      $$('.remove-img').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.dataset.id;
+          state.uploadedImages = state.uploadedImages.filter(img => img.id != id);
+          updatePreview();
+        });
+      });
+    }
   }
 
-  // ====== 启动 ======
-  (async function init(){
-    state.editMode = location.hash === '#edit';
-    state.all = await loadData();
-    initFilterOptions();
-    bindUI();
-    renderList();
-    renderEditPanel();
-  })();
+  // 处理表单提交（本地新增+持久化）
+  function mapLabel(type, value) {
+    const dicts = {
+      cat: [
+        { zh: '车模', en: 'Car Models' },
+        { zh: '积木', en: 'Building Blocks' },
+        { zh: '娃娃/公仔', en: 'Dolls/Figures' },
+        { zh: '球类', en: 'Balls' },
+        { zh: '水枪/水具', en: 'Water Guns/Toys' },
+        { zh: '桌游/棋类', en: 'Board Games' },
+        { zh: '齿轮/配件', en: 'Gears/Accessories' }
+      ],
+      process: [
+        { zh: '注塑', en: 'Injection Molding' },
+        { zh: '吹塑', en: 'Blow Molding' },
+        { zh: '压铸', en: 'Die Casting' }
+      ],
+      weight: [
+        { zh: '小型', en: 'Small' },
+        { zh: '中型', en: 'Medium' },
+        { zh: '大型', en: 'Large' }
+      ]
+    }[type] || [];
+    const found = dicts.find(it => it.zh === value || it.en === value);
+    return found || { zh: value, en: value };
+  }
+  function mapYearsToNumber(label) {
+    if (['1年以内','Within 1 year'].includes(label)) return 1;
+    if (['1-3年','1-3 years'].includes(label)) return 3;
+    if (['3-5年','3-5 years'].includes(label)) return 5;
+    if (['5年以上','Over 5 years'].includes(label)) return 10;
+    return 0;
+  }
+  function handleSubmit() {
+    const title = (document.getElementById('postTitle').value || '').trim();
+    const catRaw = document.getElementById('postCategory').value || '';
+    const procRaw = document.getElementById('postProcess').value || '';
+    const price = Number(document.getElementById('postPrice').value) || 0;
+    const material = document.getElementById('postMaterial').value || '';
+    const shots = Number(document.getElementById('postShots').value) || 0;
+    const yearsLabel = document.getElementById('postYears').value || '';
+    const weightRaw = document.getElementById('postWeight').value || '';
+    const desc = (document.getElementById('postDesc').value || '').trim();
+
+    if (!title) {
+      alert(currentLang === 'zh' ? '请输入标题' : 'Please enter title');
+      return;
+    }
+    const all = getAllData();
+    const id = (all.length ? Math.max(...all.map(i => i.id)) : 0) + 1;
+
+    const cat = mapLabel('cat', catRaw);
+    const proc = mapLabel('process', procRaw);
+    const weight = mapLabel('weight', weightRaw);
+
+    const newItem = {
+      id,
+      title,
+      title_en: title,
+      cat: cat.zh,
+      cat_en: cat.en,
+      process: proc.zh,
+      process_en: proc.en,
+      material,
+      shots,
+      price,
+      cond: "B",
+      cond_en: "Grade B",
+      bundle: [],
+      bundle_en: [],
+      seller: "market@toy-moulds.example",
+      sellerName: currentLang === 'zh' ? "自定义发布" : "User Post",
+      sellerName_en: "User Post",
+      state: "在售",
+      state_en: "Available",
+      thumb: "uploaded",
+      images: (state.uploadedImages || []).map((_, idx) => `uploaded${idx+1}`),
+      year: mapYearsToNumber(yearsLabel),
+      weight: weight.zh,
+      weight_en: weight.en,
+      cavities: currentLang === 'zh' ? "未知" : "Unknown",
+      cavities_en: "Unknown",
+      size: desc ? desc.slice(0, 60) : ""
+    };
+
+    DYNAMIC_DATA.push(newItem);
+    try {
+      localStorage.setItem('dynamicData', JSON.stringify(DYNAMIC_DATA));
+    } catch(e){}
+
+    state.uploadedImages = [];
+    const preview = document.getElementById('previewContainer');
+    if (preview) preview.innerHTML = '';
+    const limit = document.getElementById('uploadLimit');
+    if (limit) limit.textContent = currentLang === 'zh' ? '已选择 0/5 张图片' : 'Selected 0/5 images';
+    document.getElementById('post').close();
+
+    applyFilters();
+
+    alert(currentLang === 'zh'
+      ? '发布成功（本地预览）。要让所有客户看到，需要配置后端存储。'
+      : 'Posted locally (preview only). To make it visible to all users, please configure a backend.');
+  }
+
+  // 更新价格范围文本
+  function updatePriceRangeText() {
+    const min = els.min.value || 0;
+    const max = els.max.value || '不限';
+    els.priceRangeText.textContent = currentLang === 'zh' ? `${min} - ${max}` : `${min} - ${max === '不限' ? 'Unlimited' : max}`;
+  }
+
+  // 切换筛选器显示
+  function toggleFilter(el) {
+    const parent = el.closest('.filter-group');
+    const chips = parent.querySelector('.chips');
+    chips.style.maxHeight = chips.style.maxHeight ? null : chips.scrollHeight + 'px';
+  }
+
+  // 处理筛选标签点击
+  function chipToggle(e) {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const input = chip.querySelector('input');
+    input.checked = !input.checked;
+    chip.classList.toggle('active', input.checked);
+    applyFilters();
+  }
+
+  // 应用筛选条件
+  function applyFilters() {
+    state.selectedFilters = {
+      q: els.q.value.toLowerCase(),
+      cat: els.cat.value,
+      process: els.process.value,
+      material: els.material.value,
+      min: els.min.value ? Number(els.min.value) : 0,
+      max: els.max.value ? Number(els.max.value) : Infinity,
+      cond: $$('#cond input:checked').map(i => i.value),
+      bundle: $$('#bundles input:checked').map(i => i.value),
+      params: $$('#params input:checked').map(i => i.value),
+      years: $$('#years input:checked').map(i => i.value)
+    };
+
+    state.filteredData = getAllData().filter(item => {
+      if (state.selectedFilters.q && 
+          !item.title.toLowerCase().includes(state.selectedFilters.q) &&
+          !item.title_en.toLowerCase().includes(state.selectedFilters.q)) {
+        return false;
+      }
+      // 类目过滤（兼容中英文）
+      if (state.selectedFilters.cat &&
+          item.cat !== state.selectedFilters.cat &&
+          item.cat_en !== state.selectedFilters.cat) {
+        return false;
+      }
+      // 工艺过滤（兼容中英文）
+      if (state.selectedFilters.process &&
+          item.process !== state.selectedFilters.process &&
+          item.process_en !== state.selectedFilters.process) {
+        return false;
+      }
+      if (state.selectedFilters.material && item.material !== state.selectedFilters.material) {
+        return false;
+      }
+      if (item.price < state.selectedFilters.min || item.price > state.selectedFilters.max) {
+        return false;
+      }
+      if (state.selectedFilters.cond.length > 0 && !state.selectedFilters.cond.includes(item.cond)) {
+        return false;
+      }
+      if (state.selectedFilters.bundle.length > 0 && 
+          !state.selectedFilters.bundle.some(b => item.bundle.includes(b))) {
+        return false;
+      }
+      if (state.selectedFilters.params.length > 0) {
+        let matchesParam = false;
+        if (state.selectedFilters.params.includes('大型') && item.weight === '大型') matchesParam = true;
+        if (state.selectedFilters.params.includes('中型') && item.weight === '中型') matchesParam = true;
+        if (state.selectedFilters.params.includes('小型') && item.weight === '小型') matchesParam = true;
+        if (state.selectedFilters.params.includes('单腔') && item.cavities.includes('单')) matchesParam = true;
+        if (state.selectedFilters.params.includes('多腔') && !item.cavities.includes('单')) matchesParam = true;
+        if (!matchesParam) return false;
+      }
+      if (state.selectedFilters.years.length > 0) {
+        let matchesYear = false;
+        if (state.selectedFilters.years.includes('1') && item.year <= 1) matchesYear = true;
+        if (state.selectedFilters.years.includes('3') && item.year > 1 && item.year <= 3) matchesYear = true;
+        if (state.selectedFilters.years.includes('5') && item.year > 3 && item.year <= 5) matchesYear = true;
+        if (state.selectedFilters.years.includes('10') && item.year > 5) matchesYear = true;
+        if (!matchesYear) return false;
+      }
+      return true;
+    });
+
+    sortData();
+    state.currentPage = 1;
+    renderFilterTags();
+    renderPagination();
+    renderCurrentPage();
+    els.empty.hidden = state.filteredData.length > 0;
+    els.count.textContent = currentLang === 'zh' 
+      ? `找到 ${state.filteredData.length} 个结果` 
+      : `Found ${state.filteredData.length} results`;
+  }
+
+  // 排序数据
+  function sortData() {
+    switch(state.selectedFilters.sort) {
+      case 'price_up':
+        state.filteredData.sort((a, b) => a.price - b.price);
+        break;
+      case 'price_down':
+        state.filteredData.sort((a, b) => b.price - a.price);
+        break;
+      case 'shots':
+        state.filteredData.sort((a, b) => a.shots - b.shots);
+        break;
+      case 'new':
+      default:
+        state.filteredData.sort((a, b) => b.id - a.id);
+        break;
+    }
+  }
+
+  // 渲染筛选标签
+  function renderFilterTags() {
+    els.filterTags.innerHTML = `<span class="muted" data-i18n="selected">${i18n[currentLang]['selected']}</span>`;
+    const filters = [];
+    if (state.selectedFilters.q) {
+      filters.push({ text: `"${state.selectedFilters.q}"`, type: 'q' });
+    }
+    if (state.selectedFilters.cat) {
+      const option = Array.from($('#cat').options).find(o => o.value === state.selectedFilters.cat);
+      filters.push({ text: option ? option.textContent : state.selectedFilters.cat, type: 'cat' });
+    }
+    if (state.selectedFilters.process) {
+      const option = Array.from($('#process').options).find(o => o.value === state.selectedFilters.process);
+      filters.push({ text: option ? option.textContent : state.selectedFilters.process, type: 'process' });
+    }
+    if (state.selectedFilters.material) {
+      const option = $(`#material option[value="${state.selectedFilters.material}"]`);
+      filters.push({ text: option ? option.textContent : state.selectedFilters.material, type: 'material' });
+    }
+    if (state.selectedFilters.min > 0 || state.selectedFilters.max < Infinity) {
+      const min = state.selectedFilters.min;
+      const max = state.selectedFilters.max < Infinity ? state.selectedFilters.max : '∞';
+      filters.push({ text: `${min}-${max} USD`, type: 'price' });
+    }
+    state.selectedFilters.cond.forEach(cond => {
+      const label = $(`#cond input[value="${cond}"]`).closest('.chip').textContent.trim();
+      filters.push({ text: label, type: 'cond', value: cond });
+    });
+    state.selectedFilters.bundle.forEach(bundle => {
+      const label = $(`#bundles input[value="${bundle}"]`).closest('.chip').textContent.trim();
+      filters.push({ text: label, type: 'bundle', value: bundle });
+    });
+    state.selectedFilters.params.forEach(param => {
+      const label = $(`#params input[value="${param}"]`).closest('.chip').textContent.trim();
+      filters.push({ text: label, type: 'params', value: param });
+    });
+    state.selectedFilters.years.forEach(year => {
+      const label = $(`#years input[value="${year}"]`).closest('.chip').textContent.trim();
+      filters.push({ text: label, type: 'years', value: year });
+    });
+    filters.forEach(filter => {
+      const tag = document.createElement('span');
+      tag.className = 'filter-tag';
+      tag.innerHTML = `
+        ${filter.text}
+        <span class="close" data-type="${filter.type}" ${filter.value ? `data-value="${filter.value}"` : ''}>×</span>
+      `;
+      els.filterTags.appendChild(tag);
+    });
+    $$('.filter-tag .close').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const type = this.dataset.type;
+        const value = this.dataset.value;
+        switch(type) {
+          case 'q': els.q.value = ''; break;
+          case 'cat': els.cat.value = ''; break;
+          case 'process': els.process.value = ''; break;
+          case 'material': els.material.value = ''; break;
+          case 'price':
+            els.min.value = '';
+            els.max.value = '';
+            updatePriceRangeText();
+            break;
+          case 'cond':
+            $(`#cond input[value="${value}"]`).closest('.chip').classList.remove('active');
+            $(`#cond input[value="${value}"]`).checked = false;
+            break;
+          case 'bundle':
+            $(`#bundles input[value="${value}"]`).closest('.chip').classList.remove('active');
+            $(`#bundles input[value="${value}"]`).checked = false;
+            break;
+          case 'params':
+            $(`#params input[value="${value}"]`).closest('.chip').classList.remove('active');
+            $(`#params input[value="${value}"]`).checked = false;
+            break;
+          case 'years':
+            $(`#years input[value="${value}"]`).closest('.chip').classList.remove('active');
+            $(`#years input[value="${value}"]`).checked = false;
+            break;
+        }
+        applyFilters();
+      });
+    });
+  }
+
+  // 渲染分页
+  function renderPagination() {
+    const totalPages = Math.ceil(state.filteredData.length / state.itemsPerPage);
+    els.prevPage.disabled = state.currentPage === 1;
+    els.nextPage.disabled = state.currentPage === totalPages || totalPages === 0;
+    const pageButtons = $$('#pagination .page-btn:not(#prevPage):not(#nextPage)');
+    pageButtons.forEach(btn => btn.remove());
+    const pagesToShow = [];
+    if (totalPages > 1) {
+      if (state.currentPage > 1) pagesToShow.push(state.currentPage - 1);
+      pagesToShow.push(state.currentPage);
+      if (state.currentPage < totalPages) pagesToShow.push(state.currentPage + 1);
+    } else if (totalPages === 1) {
+      pagesToShow.push(1);
+    }
+    pagesToShow.forEach(page => {
+      const btn = document.createElement('button');
+      btn.className = `page-btn ${page === state.currentPage ? 'active' : ''}`;
+      btn.dataset.page = page;
+      btn.textContent = page;
+      btn.addEventListener('click', () => {
+        state.currentPage = page;
+        renderPagination();
+        renderCurrentPage();
+      });
+      els.prevPage.after(btn);
+    });
+  }
+
+  // 渲染当前页内容
+  function renderCurrentPage() {
+    const start = (state.currentPage - 1) * state.itemsPerPage;
+    theEnd = start + state.itemsPerPage;
+    const currentItems = state.filteredData.slice(start, theEnd);
+    els.grid.innerHTML = '';
+    currentItems.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const title = currentLang === 'zh' ? item.title : item.title_en;
+      const cat = currentLang === 'zh' ? item.cat : item.cat_en;
+      const process = currentLang === 'zh' ? item.process : item.process_en;
+      const stateText = currentLang === 'zh' ? item.state : item.state_en;
+      card.innerHTML = `
+        <div class="thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <div class="pic-count">${item.images.length}</div>
+        </div>
+        <div class="state ${item.state === '已售' ? 'sold' : item.state === '在售' ? 'ok' : 'warn'}">${stateText}</div>
+        <div class="body">
+          <div class="title">${title}</div>
+          <div class="meta">
+            <span class="badge">${cat}</span>
+            <span class="badge">${process}</span>
+            <span class="badge">${item.material}</span>
+          </div>
+          <div class="price">USD ${item.price.toLocaleString()}</div>
+          <div class="seller-info">
+            <div class="seller-avatar">${item.sellerName.charAt(0)}</div>
+            <span>${currentLang === 'zh' ? item.sellerName : item.sellerName_en}</span>
+          </div>
+          <div class="foot">
+            <button class="btn" data-id="${item.id}">${currentLang === 'zh' ? '查看详情' : 'View Details'}</button>
+          </div>
+        </div>
+      `;
+      els.grid.appendChild(card);
+    });
+  }
+
+  // 打开详情弹窗
+  function openDetails(id) {
+    const item = getAllData().find(i => i.id == id);
+    if (!item) return;
+    const title = currentLang === 'zh' ? item.title : item.title_en;
+    const cat = currentLang === 'zh' ? item.cat : item.cat_en;
+    const process = currentLang === 'zh' ? item.process : item.process_en;
+    const cond = currentLang === 'zh' ? item.cond + '级' : item.cond_en;
+    const stateText = currentLang === 'zh' ? item.state : item.state_en;
+    const weight = currentLang === 'zh' ? item.weight : item.weight_en;
+    const cavities = currentLang === 'zh' ? item.cavities : item.cavities_en;
+    const bundles = currentLang === 'zh' ? item.bundle.join('，') : item.bundle_en.join(', ');
+    $('#dlg-title').textContent = title;
+    $('#dlg-mail').href = `mailto:${item.seller}?subject=${encodeURIComponent(title)}`;
+    $('#dlg-body').innerHTML = `
+      <div class="img-gallery">
+        <div class="thumb-list">
+          ${item.images.map((img, i) => `
+            <div class="thumb-item ${i === 0 ? 'active' : ''}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+          `).join('')}
+        </div>
+        <div class="main-img">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="category">${i18n[currentLang]['category']}</span>
+          <span>${cat}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="process">${i18n[currentLang]['process']}</span>
+          <span>${process}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="material">${i18n[currentLang]['material']}</span>
+          <span>${item.material}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="price">${i18n[currentLang]['price_usd']}</span>
+          <span>USD ${item.price.toLocaleString()}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="shot_count">${i18n[currentLang]['shot_count']}</span>
+          <span>${item.shots.toLocaleString()}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="years_of_use">${i18n[currentLang]['years_of_use']}</span>
+          <span>${item.year} ${currentLang === 'zh' ? '年' : 'years'}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label" data-i18n="mould_weight">${i18n[currentLang]['mould_weight']}</span>
+          <span>${weight} (${item.weightKg ?? ''}kg)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">${currentLang === 'zh' ? '腔数' : 'Cavities'}</span>
+          <span>${cavities}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">${currentLang === 'zh' ? '尺寸' : 'Size'}</span>
+          <span>${item.size}</span>
+        </div>
+        <div class="detail-item" style="grid-column: 1 / -1">
+          <span class="detail-label" data-i18n="accessories">${i18n[currentLang]['accessories']}</span>
+          <span>${bundles}</span>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-weight:bold;margin-bottom:8px" data-i18n="seller_info">${currentLang === 'zh' ? '卖家信息' : 'Seller Information'}</div>
+        <div class="pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          ${currentLang === 'zh' ? item.sellerName : item.sellerName_en}
+        </div>
+        <div class="pill" style="margin-top:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <polyline points="3 9 12 15 21 9"></polyline>
+          </svg>
+          ${item.seller}
+        </div>
+      </div>
+    `;
+    document.getElementById('dlg').showModal();
+  }
   </script>
 </body>
 </html>
+</FILE_CONTENT>
+</ATTACHMENT_FILE>
